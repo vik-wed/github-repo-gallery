@@ -1,15 +1,18 @@
 // variable targeting the profile info section of the site
 let profileInfoSection = document.querySelector(".overview"); 
+// variable targeting the ul that will populate public repos
+let listOfRepos = document.querySelector(".repo-list");
+
 const username = "vik-wed";
 
 // API connection
-async function githubAPI(){
+async function fetchUserData(){
     const userInfo = await fetch(`https://api.github.com/users/${username}`);
     const data = await userInfo.json();
     displayUserInfo(data)
     
 }
-githubAPI();
+fetchUserData();
 
 function displayUserInfo(data){
     let div = document.createElement("div");
@@ -24,4 +27,22 @@ function displayUserInfo(data){
                         <p><strong>Number of public repos:</strong> ${data.public_repos}</p>
                     </div>`;
     profileInfoSection.append(div);
+    fetchRepoData();
+}
+
+async function fetchRepoData(){
+    const repoInfo = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const repoData = await repoInfo.json();
+    displayRepoInfo(repoData);
+
+}
+
+function displayRepoInfo(repoData){
+    for (let repo of repoData){
+        let li = document.createElement("li");
+        li.classList.add("repo");
+        li.innerHTML = `<h3>${repo.name}</h3>`;
+        listOfRepos.append(li);
+
+    }
 }
