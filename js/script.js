@@ -4,6 +4,8 @@ let profileInfoSection = document.querySelector(".overview");
 let listOfRepos = document.querySelector(".repo-list");
 let allReposContainer = document.querySelector(".repos");
 let indRepoData = document.querySelector(".repo-data");
+let backToGalleryButton = document.querySelector(".view-repos");
+let filterInput = document.querySelector(".filter-repos");
 
 const username = "vik-wed";
 
@@ -40,6 +42,7 @@ async function fetchRepoData(){
 }
 
 function displayRepoInfo(repoData){
+    filterInput.classList.remove("hide");
     for (let repo of repoData){
         let li = document.createElement("li");
         li.classList.add("repo");
@@ -47,6 +50,7 @@ function displayRepoInfo(repoData){
         listOfRepos.append(li);
 
     }
+
 }
 
 listOfRepos.addEventListener("click", function(e){
@@ -73,6 +77,7 @@ function displaySpecRepo(repoInfo, languages){
     indRepoData.innerHTML = "";
     indRepoData.classList.remove("hide");
     allReposContainer.classList.add("hide");
+    backToGalleryButton.classList.remove("hide");
     let divElement = document.createElement("div");
     divElement.innerHTML = `
                                 <h3>Name: ${repoInfo.name}</h3>
@@ -84,3 +89,23 @@ function displaySpecRepo(repoInfo, languages){
     indRepoData.append(divElement);                            
 
 }
+
+backToGalleryButton.addEventListener("click", function(){
+    allReposContainer.classList.remove("hide");
+    indRepoData.classList.add("hide");
+    backToGalleryButton.classList.add("hide");
+})
+
+filterInput.addEventListener("input", function(e){
+    let input = e.target.value; 
+    let repos = document.querySelectorAll(".repo");
+    let inputLower = input.toLowerCase();
+    for (let repo of repos){
+        let repoLower = repo.innerText.toLowerCase();
+        if (repoLower.includes(inputLower)){
+            repo.classList.remove("hide");
+        } else {
+            repo.classList.add("hide");
+        }
+    }
+})
